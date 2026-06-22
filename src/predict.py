@@ -1,0 +1,152 @@
+import torch
+import torch.nn as nn
+import cv2
+import numpy as np
+import sys
+
+
+class_names = {
+    0: "Speed limit (20km/h)",
+    1: "Speed limit (30km/h)",
+    2: "Speed limit (50km/h)",
+    3: "Speed limit (60km/h)",
+    4: "Speed limit (70km/h)",
+    5: "Speed limit (80km/h)",
+    6: "End of speed limit (80km/h)",
+    7: "Speed limit (100km/h)",
+    8: "Speed limit (120km/h)",
+    9: "No passing",
+    10: "No passing for vehicles over 3.5 tons",
+    11: "Right-of-way at next intersection",
+    12: "Priority road",
+    13: "Yield",
+    14: "Stop",
+    15: "No vehicles",
+    16: "Vehicles over 3.5 tons prohibited",
+    17: "No entry",
+    18: "General caution",
+    19: "Dangerous curve left",
+    20: "Dangerous curve right",
+    21: "Double curve",
+    22: "Bumpy road",
+    23: "Slippery road",
+    24: "Road narrows on the right",
+    25: "Road work",
+    26: "Traffic signals",
+    27: "Pedestrians",
+    28: "Children crossing",
+    29: "Bicycles crossing",
+    30: "Beware of ice or snow",
+    31: "Wild animals crossing",
+    32: "End of all speed and passing limits",
+    33: "Turn right ahead",
+    34: "Turn left ahead",
+    35: "Ahead only",
+    36: "Go straight or right",
+    37: "Go straight or left",
+    38: "Keep right",
+    39: "Keep left",
+    40: "Roundabout mandatory",
+    41: "End of no passing",
+    42: "End of no passing by vehicles over 3.5 tons"
+}
+
+
+class TrafficSignCNN(nn.Module):
+
+    def __init__(self):
+        super().__init__()
+
+        self.conv1 = nn.Conv2d(3, 32, kernel_size=3)
+        self.conv2 = nn.Conv2d(32, 64, kernel_size=3)
+
+        self.pool = nn.MaxPool2d(2)
+
+        self.fc1 = nn.Linear(64 * 6 * 6, 128)
+        self.fc2 = nn.Linear(128, 43)
+
+    def forward(self, x):
+        x = self.pool(torch.relu(self.conv1(x)))
+        x = self.pool(torch.relu(self.conv2(x)))
+
+        x = x.view(x.size(0), -1)
+
+        x = torch.relu(self.fc1(x))
+        x = self.fc2(x)
+
+        return x
+
+
+# Load trained model
+model = TrafficSignCNN()
+
+model.load_state_dict(
+    torch.load(
+        "../models/traffic_sign_model.pth",
+        map_location="cpu"
+    )
+)
+
+model.eval()
+
+
+def predict_image(image_path):
+
+    img = cv2.imread(image_path)
+
+    if img is None:
+        print("❌ Could not load image.")
+        return
+
+    img = cv2.cvtColor(
+        img,
+        cv2.COLOR_BGR2RGB
+    )
+
+    img = cv2.resize(
+        img,
+        (32, 32)
+    )
+
+    img = img.astype(np.float32) / 255.0
+
+    img = torch.tensor(
+        img,
+        dtype=torch.float32
+    )
+
+    img = img.permute(2, 0, 1)
+    img = img.unsqueeze(0)
+
+    with torch.no_grad():
+
+        output = model(img)
+
+        probabilities = torch.softmax(
+            output,
+            dim=1
+        )
+
+        confidence, prediction = torch.max(
+            probabilities,
+            dim=1
+        )
+
+    predicted_class = prediction.item()
+
+    print("\n🚦 Traffic Sign Prediction")
+    print("-" * 35)
+    print(f"Sign       : {class_names[predicted_class]}")
+    print(f"Class ID   : {predicted_class}")
+    print(f"Confidence : {confidence.item()*100:.2f}%")
+
+
+if __name__ == "__main__":
+
+    if len(sys.argv) < 2:
+        print(
+            "Usage: python predict.py image_path"
+        )
+
+    else:
+        predict_image(sys.argv[1])
