@@ -1,6 +1,16 @@
 # 🚦 German Traffic Sign Classifier
 
-A deep learning-based traffic sign recognition system built using **PyTorch** and the **German Traffic Sign Recognition Benchmark (GTSRB)** dataset. The project includes model training, prediction scripts, and a Streamlit web application for real-time traffic sign classification.
+A deep learning-based traffic sign recognition system built using **PyTorch** and the **German Traffic Sign Recognition Benchmark (GTSRB)** dataset. The project includes model training, prediction scripts, and a deployed Streamlit web application for real-time traffic sign classification.
+
+---
+
+## 🔗 Live Demo
+
+https://germantrafficsignclassifier-byvanshgulati.streamlit.app/
+
+## 🔗 GitHub Repository
+
+https://github.com/vanshgulatii/GermanTrafficSignClassifier
 
 ---
 
@@ -9,26 +19,19 @@ A deep learning-based traffic sign recognition system built using **PyTorch** an
 - Train a Convolutional Neural Network (CNN) on the GTSRB dataset
 - Predict traffic signs from uploaded images
 - Interactive web application using Streamlit
+- Real-time confidence scoring
 - Model saving and loading with PyTorch
-- Real-world image testing
-- Modular project structure suitable for further development
+- Modular and production-style project structure
 
 ---
 
 ## 🖼️ Demo
 
-### Streamlit Web App
-Upload a traffic sign image and the model predicts:
+The application allows users to upload a traffic sign image and receive:
 
-- Traffic sign class
+- Predicted traffic sign class
 - Confidence score
-
-Example:
-
-| Image | Prediction |
-|-------|-------------|
-| 30 km/h speed sign | Speed limit (30km/h) |
-| Confidence | 82.27% |
+- Real-time inference through a Streamlit web interface
 
 ---
 
@@ -91,11 +94,10 @@ Output Layer (43 classes)
 **German Traffic Sign Recognition Benchmark (GTSRB)**
 
 - Number of classes: 43
-- Total images: 39,252
+- Total images: 39,252+
 - Image size: 32 × 32 pixels
 
 Dataset:
-
 https://benchmark.ini.rub.de/gtsrb_news.html
 
 ---
@@ -104,11 +106,23 @@ https://benchmark.ini.rub.de/gtsrb_news.html
 
 | Metric | Value |
 |---------|--------|
-| Training Images | 39,252 |
+| Training Images | 39,252+ |
 | Number of Classes | 43 |
 | Validation Accuracy | 87.99% |
 | Framework | PyTorch |
 | Deployment | Streamlit |
+
+---
+
+## 🛠️ Technologies Used
+
+- Python
+- PyTorch
+- OpenCV
+- NumPy
+- Scikit-Learn
+- Streamlit
+- Git & GitHub
 
 ---
 
@@ -155,19 +169,13 @@ models/traffic_sign_model.pth
 
 ```bash
 cd src
-
-python predict.py \
-../data/GTSRB/Final_Training/Images/00001/00001_00000.ppm
+python predict.py image_path
 ```
 
-Example output:
+Example:
 
-```text
-🚦 Traffic Sign Prediction
------------------------------------
-Sign       : Speed limit (30km/h)
-Class ID   : 1
-Confidence : 82.27%
+```bash
+python predict.py ../data/GTSRB/Final_Training/Images/00001/00001_00000.ppm
 ```
 
 ---
@@ -187,25 +195,13 @@ http://localhost:8501
 
 ---
 
-## 🛠 Technologies Used
-
-- Python
-- PyTorch
-- OpenCV
-- NumPy
-- Scikit-Learn
-- Streamlit
-- Git & GitHub
-
----
-
 ## 🔮 Future Improvements
 
 - Data augmentation
 - Top-3 predictions
 - Confusion matrix visualization
 - Transfer learning using ResNet18
-- Model deployment to Streamlit Community Cloud
+- Docker deployment
 - Mobile-friendly interface
 
 ---
@@ -215,15 +211,14 @@ http://localhost:8501
 **Vansh Gulati**
 
 M.Sc. Digital Engineering  
-Bauhaus-Universität Weimar  
-Interested in Artificial Intelligence, Machine Learning and Computer Vision.
+Bauhaus-Universität Weimar
 
-GitHub:
-https://github.com/vanshgulatii
+Interested in Artificial Intelligence, Machine Learning, and Computer Vision.
 
-LinkedIn:
-https://www.linkedin.com/in/vansh-g-31a607197/
+GitHub: https://github.com/vanshgulatii
+
+LinkedIn: https://www.linkedin.com/in/vansh-g-31a607197/
 
 ---
 
-## ⭐ If you found this project useful, consider giving it a star!
+⭐ If you found this project useful, consider giving it a star!
