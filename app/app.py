@@ -63,6 +63,7 @@ class_names = {
     40: "Roundabout mandatory",
     41: "End of no passing",
     42: "End of no passing by vehicles over 3.5 tons"
+    43: "Unknown traffic sign"
 }
 
 @st.cache_resource
