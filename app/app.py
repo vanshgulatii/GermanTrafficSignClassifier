@@ -176,14 +176,14 @@ if uploaded_file is not None:
     margin = confidences[0] - confidences[1]
 
     if top_confidence < 0.80 or margin < 0.10:
-    st.warning(
-        "⚠️ The model is uncertain. This may be an unseen traffic sign."
-    )
+        st.warning(
+            "⚠️ The model is uncertain. This may be an unseen traffic sign."
+        )
 
     if top_confidence >= 0.80 and margin >= 0.10:
-    st.success(
-        "✅ High confidence prediction"
-    )
+        st.success(
+            "✅ High confidence prediction"
+        )
 
     st.subheader("Top Predictions")
 
