@@ -61,7 +61,7 @@ def load_model():
 
     model.load_state_dict(
         torch.load(
-            "../models/traffic_sign_model.pth",
+            "models/traffic_sign_model.pth",
             map_location="cpu"
         )
     )
