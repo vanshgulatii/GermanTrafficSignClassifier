@@ -233,7 +233,7 @@ GitHub:
 https://github.com/vanshgulatii
 
 LinkedIn:
-(Add your LinkedIn profile here)
+https://www.linkedin.com/in/vansh-g-31a607197/
 
 ---
 
