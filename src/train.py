@@ -6,7 +6,13 @@ import torch.nn as nn
 import matplotlib.pyplot as plt
 
 from sklearn.model_selection import train_test_split
-from torch.utils.data import TensorDataset, DataLoader
+from torch.utils.data import (
+    TensorDataset,
+    DataLoader,
+    Dataset
+)
+
+from torchvision import transforms
 
 from model import TrafficSignCNN
 
@@ -25,6 +31,30 @@ classes = sorted(
 )
 
 print("Loading dataset...")
+
+train_transform = transforms.Compose([
+    transforms.ToPILImage(),
+
+    transforms.RandomRotation(15),
+
+    transforms.RandomAffine(
+        degrees=0,
+        translate=(0.1, 0.1),
+        scale=(0.9, 1.1)
+    ),
+
+    transforms.ColorJitter(
+        brightness=0.2,
+        contrast=0.2,
+        saturation=0.2
+    ),
+
+    transforms.GaussianBlur(
+        kernel_size=3
+    ),
+
+    transforms.ToTensor()
+])
 
 for class_id in classes:
 
@@ -119,15 +149,48 @@ print("Validation shape:", X_val.shape)
 # Data Loaders
 # ======================
 
-train_dataset = TensorDataset(
+class TrafficDataset(Dataset):
+
+    def __init__(
+        self,
+        images,
+        labels,
+        transform=None
+    ):
+        self.images = images
+        self.labels = labels
+        self.transform = transform
+
+    def __len__(self):
+        return len(self.images)
+
+    def __getitem__(self, idx):
+
+        image = self.images[idx]
+        label = self.labels[idx]
+
+        image = image.permute(
+            1,
+            2,
+            0
+        ).numpy()
+
+        if self.transform:
+            image = self.transform(image)
+
+        return image, label
+    
+train_dataset = TrafficDataset(
     X_train,
-    y_train
+    y_train,
+    transform=train_transform
 )
 
 val_dataset = TensorDataset(
     X_val,
     y_val
 )
+
 
 train_loader = DataLoader(
     train_dataset,
