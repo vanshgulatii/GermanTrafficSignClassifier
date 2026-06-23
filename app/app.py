@@ -126,13 +126,16 @@ def predict_image(image):
         top_probs, top_classes = torch.topk(
         probabilities,
         3
-    )
+        )
 
+
+    top_confidence = top_probs[0][0].item()
 
     return (
-    top_classes[0].tolist(),
-    top_probs[0].tolist()
-)
+        top_classes[0].tolist(),
+        top_probs[0].tolist(),
+        top_confidence
+    )
 
 
 st.set_page_config(
@@ -147,6 +150,10 @@ st.write(
     "Upload a traffic sign image and let the AI identify it."
 )
 
+st.caption(
+    "Model trained on the German Traffic Sign Recognition Benchmark (GTSRB). Predictions on unseen traffic signs may be unreliable."
+)
+
 uploaded_file = st.file_uploader(
     "Choose an image",
     type=["png", "jpg", "jpeg", "ppm"]
@@ -154,7 +161,7 @@ uploaded_file = st.file_uploader(
 
 if uploaded_file is not None:
 
-    image = Image.open(uploaded_file)
+    image = Image.open(uploaded_file).convert("RGB")
 
     st.image(
         image,
@@ -162,8 +169,20 @@ if uploaded_file is not None:
         use_container_width=True
     )
 
-    predictions, confidences = predict_image(
+    predictions, confidences, top_confidence = predict_image(
     image
+    )
+
+    margin = confidences[0] - confidences[1]
+
+    if top_confidence < 0.80 or margin < 0.10:
+    st.warning(
+        "⚠️ The model is uncertain. This may be an unseen traffic sign."
+    )
+
+    if top_confidence >= 0.80 and margin >= 0.10:
+    st.success(
+        "✅ High confidence prediction"
     )
 
     st.subheader("Top Predictions")
