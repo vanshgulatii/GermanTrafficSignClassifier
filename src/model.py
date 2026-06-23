@@ -2,6 +2,7 @@ import torch
 import torch.nn as nn
 
 class TrafficSignCNN(nn.Module):
+
     def __init__(self):
         super().__init__()
 
@@ -11,6 +12,9 @@ class TrafficSignCNN(nn.Module):
         self.pool = nn.MaxPool2d(2)
 
         self.fc1 = nn.Linear(64 * 6 * 6, 128)
+
+        self.dropout = nn.Dropout(0.5)
+
         self.fc2 = nn.Linear(128, 43)
 
     def forward(self, x):
