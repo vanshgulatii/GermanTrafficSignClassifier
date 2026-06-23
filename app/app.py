@@ -3,6 +3,19 @@ import torch
 import sys
 sys.path.append("../src")
 
+import sys
+import os
+
+sys.path.append(
+    os.path.abspath(
+        os.path.join(
+            os.path.dirname(__file__),
+            "..",
+            "src"
+        )
+    )
+)
+
 from model import TrafficSignCNN
 import cv2
 import numpy as np
