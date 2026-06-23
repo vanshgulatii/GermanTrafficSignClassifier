@@ -78,6 +78,11 @@ for class_id in classes:
         if img is None:
             continue
 
+        img = cv2.cvtColor(
+            img,
+            cv2.COLOR_BGR2RGB
+        )
+
         img = cv2.resize(
             img,
             (32, 32)
