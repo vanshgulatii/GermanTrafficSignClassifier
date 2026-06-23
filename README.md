@@ -210,17 +210,6 @@ http://localhost:8501
 
 ---
 
-## 📸 Screenshots
-
-Add screenshots here:
-
-```text
-images/app_homepage.png
-images/prediction_example.png
-```
-
----
-
 ## 👨‍💻 Author
 
 **Vansh Gulati**
