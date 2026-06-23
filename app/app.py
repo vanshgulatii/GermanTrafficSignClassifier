@@ -1,9 +1,6 @@
 import streamlit as st
 import torch
 import sys
-sys.path.append("../src")
-
-import sys
 import os
 
 sys.path.append(
@@ -72,12 +69,22 @@ class_names = {
 def load_model():
     model = TrafficSignCNN()
 
+    MODEL_PATH = os.path.abspath(
+    os.path.join(
+        os.path.dirname(__file__),
+        "..",
+        "models",
+        "traffic_sign_model.pth"
+    )
+    )
+
     model.load_state_dict(
         torch.load(
-            "models/traffic_sign_model.pth",
+            MODEL_PATH,
             map_location="cpu"
-        )
     )
+    )
+    
 
     model.eval()
 
@@ -116,15 +123,16 @@ def predict_image(image):
             dim=1
         )
 
-        confidence, prediction = torch.max(
-            probabilities,
-            dim=1
-        )
+        top_probs, top_classes = torch.topk(
+        probabilities,
+        3
+    )
+
 
     return (
-        prediction.item(),
-        confidence.item()
-    )
+    top_classes[0].tolist(),
+    top_probs[0].tolist()
+)
 
 
 st.set_page_config(
@@ -154,14 +162,20 @@ if uploaded_file is not None:
         use_container_width=True
     )
 
-    prediction, confidence = predict_image(
-        image
+    predictions, confidences = predict_image(
+    image
     )
 
-    st.success(
-        f"Prediction: {class_names[prediction]}"
-    )
+    st.subheader("Top Predictions")
 
-    st.info(
-        f"Confidence: {confidence*100:.2f}%"
-    )
+    for i in range(3):
+
+        class_id = predictions[i]
+        confidence = confidences[i]
+
+        st.write(
+            f"{i+1}. "
+            f"{class_names[class_id]}"
+            f" — "
+            f"{confidence*100:.2f}%"
+        )
