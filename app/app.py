@@ -62,8 +62,7 @@ class_names = {
     39: "Keep left",
     40: "Roundabout mandatory",
     41: "End of no passing",
-    42: "End of no passing by vehicles over 3.5 tons"
-    43: "Unknown traffic sign"
+    42: "End of no passing by vehicles over 3.5 tons" ,
 }
 
 @st.cache_resource
@@ -182,9 +181,13 @@ if uploaded_file is not None:
         )
 
     if top_confidence >= 0.80 and margin >= 0.10:
-        st.success(
-            "✅ High confidence prediction"
+        st.info(
+            f"Top prediction confidence: {top_confidence*100:.2f}%"
         )
+
+    st.warning(
+    "⚠️ High confidence does not guarantee correctness, especially for traffic signs outside the GTSRB dataset."
+    )
 
     st.subheader("Top Predictions")
 

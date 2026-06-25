@@ -27,7 +27,16 @@ images = []
 labels = []
 
 classes = sorted(
-    os.listdir(train_path)
+    [
+        folder
+        for folder in os.listdir(train_path)
+        if os.path.isdir(
+            os.path.join(
+                train_path,
+                folder
+            )
+        )
+    ]
 )
 
 print("Loading dataset...")
@@ -65,7 +74,9 @@ for class_id in classes:
 
     for image_name in os.listdir(folder):
 
-        if not image_name.endswith(".ppm"):
+        if not image_name.lower().endswith(
+            (".ppm", ".png", ".jpg", ".jpeg")
+        ):
             continue
 
         image_path = os.path.join(
